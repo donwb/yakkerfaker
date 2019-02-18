@@ -6,6 +6,7 @@ from time import sleep
 import csv
 import threading
 import os
+import collections
 
 writeOutFile = os.environ['WRITE_OUT_FILE'] == 'true'
 iterations = int(os.environ['ITERATIONS'])
@@ -18,6 +19,9 @@ def init():
 
 	users = ['donwb', 'mdrooker', 'boneil', 'bsolomon']
 	#users = ['donwb']
+	u = setupUsers()
+	print(u[0].name)
+
 	threads = []
 
 	for u in users:
@@ -64,6 +68,8 @@ def start(si):
 			
 			sleep(0.05)
 
+			# this checks to see if there's an end defined, if not run until
+			# the cows come home
 			c+=1
 			if not runForever:
 				if c >= iterations:
@@ -81,6 +87,15 @@ def makeYakkerData(user, event, geohash, yakkerID, yakarma):
 	
 	return yakkerList
 
+def setupUsers():
+	User = collections.namedtuple("User", "userid name email")
+
+	Don = User(userid="donwb", name="Don Browning", email="don.browning@gmail.com")
+	Brian = User(userid="boneil", name="Brian Oneil", email="brian.oneil@turner.com")
+	Matthew = User(userid="mdrooker", name="Matthew Drooker", email="matthew.drooker@turner.com")
+	Tony = User(userid="thoensen", name="Tony Thoensen", email="tony.thoensen@turner.com")
+
+	return [Don, Brian, Matthew, Tony]
 
 if __name__ == '__main__':
 	init()
