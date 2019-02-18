@@ -1,7 +1,7 @@
 from faker import Faker
 
 fake = Faker()
-print('here')
+print('Init Faker')
 
 from faker.providers import BaseProvider
 

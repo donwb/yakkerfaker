@@ -1,10 +1,33 @@
 from faker import Faker
 from yakker import *
+from instrumentation import *
 from datetime import datetime
 from time import sleep
 import csv
+import threading
+import os
 
-def start():
+writeOutFile = os.environ['WRITE_OUT_FILE'] == 'true'
+
+
+def init():
+	users = ['donwb', 'mdrooker', 'boneil', 'bsolomon']
+	#users = ['donwb']
+	threads = []
+
+	for u in users:
+		si = SegmentImpl(u)
+		threads.append(
+			threading.Thread(target=start, args=(si,))
+		)
+		threads[-1].start()
+
+	for t in threads:
+		t.join()
+		
+	#start()
+
+def start(si):
 	fake = Faker()
 
 	print("starting.....")
@@ -17,22 +40,29 @@ def start():
 	with open('yakkerevents.csv', 'w') as myfile:
 		wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)		
 		for _ in range(1000):
-			yd = makeYakkerData(fake.event(), fake.geohash(),
+			yd = makeYakkerData(si.user, fake.event(), fake.geohash(),
 										 fake.yakkerID(), fake.yakarma())
-
-			wr.writerow(yd)
+			if writeOutFile:
+				wr.writerow(yd)
+			
+			si.send(yd)
+			print(".", end="", flush=True)
+			
 			sleep(0.05)
 	
-	print("complete!")
+	print()
+	print("complete! ", si.user)
 
-def makeYakkerData(event, geohash, yakkerID, yakarma):
+def makeYakkerData(user, event, geohash, yakkerID, yakarma):
 	now = datetime.utcnow()
 	
-	yakkerList = [event, geohash, yakkerID, yakarma, str(now)]
+	yakkerList = [user, event, geohash, yakkerID, yakarma, str(now)]
 	
 	return yakkerList
 
 
 if __name__ == '__main__':
-	start()
+	init()
+	
+
 
