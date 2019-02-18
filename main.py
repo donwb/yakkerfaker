@@ -15,12 +15,7 @@ runForever = iterations == -1
 totalCounter = 0
 
 def init():
-	
-
-	users = ['donwb', 'mdrooker', 'boneil', 'bsolomon']
-	#users = ['donwb']
-	u = setupUsers()
-	print(u[0].name)
+	users = setupUsers()
 
 	threads = []
 
@@ -52,7 +47,7 @@ def start(si):
 		# doing a while so it can run for infinity
 		c = 0
 		while True:
-			yd = makeYakkerData(si.user, fake.event(), fake.geohash(),
+			yd = makeYakkerData(si.userInfo.userid, fake.event(), fake.geohash(),
 										 fake.yakkerID(), fake.yakarma())
 			if writeOutFile:
 				wr.writerow(yd)
@@ -78,7 +73,7 @@ def start(si):
 				
 	
 	print()
-	print("complete! ", si.user)
+	print("complete! ", si.userInfo.name)
 
 def makeYakkerData(user, event, geohash, yakkerID, yakarma):
 	now = datetime.utcnow()

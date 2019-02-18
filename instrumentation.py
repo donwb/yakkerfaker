@@ -7,15 +7,15 @@ analytics.write_key = key
 
 class SegmentImpl():
 
-    def __init__(self, userid):
-        self.user = userid
-        analytics.identify(userid,{
-            'name': 'Don Browning',
-            'email': 'don.browning@gmail.com'
+    def __init__(self, userInfo):
+        self.userInfo = userInfo
+        analytics.identify(userInfo.userid,{
+            'name': userInfo.name,
+            'email': userInfo.email
         })
 
     def send(self, trackingEvent):
-        analytics.track(self.user, 'event', {
+        analytics.track(self.userInfo.userid, 'event', {
             'name': trackingEvent[0],
             'eventName': trackingEvent[1],
             'geohash': trackingEvent[2],
