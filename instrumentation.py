@@ -17,9 +17,10 @@ class SegmentImpl():
     def send(self, trackingEvent):
         analytics.track(self.user, 'event', {
             'name': trackingEvent[0],
-            'geohash': trackingEvent[1],
-            'yakkerID': trackingEvent[2],
-            'yakarma': trackingEvent[3]
+            'eventName': trackingEvent[1],
+            'geohash': trackingEvent[2],
+            'yakkerID': trackingEvent[3],
+            'yakarma': trackingEvent[4]
             })
 
         
