@@ -8,9 +8,14 @@ import threading
 import os
 
 writeOutFile = os.environ['WRITE_OUT_FILE'] == 'true'
+iterations = int(os.environ['ITERATIONS'])
+runForever = iterations == -1
 
+totalCounter = 0
 
 def init():
+	
+
 	users = ['donwb', 'mdrooker', 'boneil', 'bsolomon']
 	#users = ['donwb']
 	threads = []
@@ -25,7 +30,7 @@ def init():
 	for t in threads:
 		t.join()
 		
-	#start()
+	
 
 def start(si):
 	fake = Faker()
@@ -36,10 +41,13 @@ def start(si):
 	fake.add_provider(GeoHashProvider)
 	fake.add_provider(YakkerIDProvider)
 	fake.add_provider(YakarmaProvider)
-	
+
 	with open('yakkerevents.csv', 'w') as myfile:
 		wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)		
-		for _ in range(1000):
+		
+		# doing a while so it can run for infinity
+		c = 0
+		while True:
 			yd = makeYakkerData(si.user, fake.event(), fake.geohash(),
 										 fake.yakkerID(), fake.yakarma())
 			if writeOutFile:
@@ -48,7 +56,20 @@ def start(si):
 			si.send(yd)
 			print(".", end="", flush=True)
 			
+			# lot of code for a counter, but here we are
+			global totalCounter
+			lock = threading.Lock()			
+			with lock:
+				totalCounter += 1
+			
 			sleep(0.05)
+
+			c+=1
+			if not runForever:
+				if c >= iterations:
+					print(str(totalCounter) + ' records generated')
+					break
+				
 	
 	print()
 	print("complete! ", si.user)
@@ -63,6 +84,7 @@ def makeYakkerData(user, event, geohash, yakkerID, yakarma):
 
 if __name__ == '__main__':
 	init()
+	
 	
 
 
