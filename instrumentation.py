@@ -6,15 +6,12 @@ key = os.environ['KEY']
 analytics.write_key = key
 
 class MParticleImpl():
+    # batch = mparticle.Batch()
+
     def __init__(self, userInfo):
         self.userInfo = userInfo
-        # how do I set mParticle user info?
-
-    def send(self, trackingEvent):
-        # Factor all this out since it works different from Segment
-        batch = mparticle.Batch()
-        batch.environment = 'development'
-
+        self.batch = mparticle.Batch()
+        self.batch.environment = 'development'
 
         configuration = mparticle.Configuration()
         configuration.api_key = os.environ['MP_KEY']
@@ -22,13 +19,22 @@ class MParticleImpl():
 
 
         configuration.debug = True #enable logging of HTTP traffic
-        api_instance = mparticle.EventsApi(configuration)
+        self.api_instance = mparticle.EventsApi(configuration)
 
+        mp_identity = mparticle.UserIdentities()
+        mp_identity.customerid = userInfo.userid
+        mp_identity.email = userInfo.email
+        mp_identity.other = userInfo.name
+
+        self.batch.user_itentities = mp_identity
+
+
+    def send(self, trackingEvent):
         app_event = mparticle.AppEvent('Example', 'navigation')
         # app_event.timestamp_unixtime_ms = example_timestamp
-        batch.events = [app_event]
+        self.batch.events = [app_event]
 
-        api_instance.upload_events(batch)
+        self.api_instance.upload_events(self.batch)
 
 class SegmentImpl():
 
