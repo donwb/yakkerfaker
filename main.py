@@ -21,8 +21,10 @@ def init():
 
 	for u in users:
 		si = SegmentImpl(u)
+		mp = MParticleImpl(u)
+
 		threads.append(
-			threading.Thread(target=start, args=(si,))
+			threading.Thread(target=start, args=(si, mp,))
 		)
 		threads[-1].start()
 
@@ -31,7 +33,7 @@ def init():
 		
 	
 
-def start(si):
+def start(si, mp):
 	fake = Faker()
 
 	print("starting.....")
@@ -49,10 +51,14 @@ def start(si):
 		while True:
 			yd = makeYakkerData(si.userInfo.userid, fake.event(), fake.geohash(),
 										 fake.yakkerID(), fake.yakarma())
+			yd_mp = makeYakkerData('donwb', fake.event(), fake.geohash(),
+										 fake.yakkerID(), fake.yakarma())
 			if writeOutFile:
 				wr.writerow(yd)
 			
 			si.send(yd)
+			mp.send(yd_mp)
+
 			print(".", end="", flush=True)
 			
 			# lot of code for a counter, but here we are

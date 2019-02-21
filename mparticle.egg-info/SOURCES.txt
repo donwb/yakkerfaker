@@ -1,0 +1,5 @@
+mparticle.egg-info/PKG-INFO
+mparticle.egg-info/SOURCES.txt
+mparticle.egg-info/dependency_links.txt
+mparticle.egg-info/requires.txt
+mparticle.egg-info/top_level.txt
