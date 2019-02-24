@@ -30,9 +30,18 @@ class MParticleImpl():
 
 
     def send(self, trackingEvent):
-        app_event = mparticle.AppEvent('Example', 'navigation')
+        app_event = mparticle.AppEvent('UserAction', 'navigation')
+        
+        app_event.custom_attributes = {
+            'name': trackingEvent[0],
+            'eventName': trackingEvent[1],
+            'geohash': trackingEvent[2],
+            'yakkerID': trackingEvent[3],
+            'yakarma': trackingEvent[4]
+        }
+
         # app_event.timestamp_unixtime_ms = example_timestamp
-        self.batch.events = [app_event]
+        self.batch.events = [ app_event]
 
         self.api_instance.upload_events(self.batch)
 
@@ -46,7 +55,7 @@ class SegmentImpl():
         })
 
     def send(self, trackingEvent):
-        analytics.track(self.userInfo.userid, 'event', {
+        analytics.track(self.userInfo.userid, 'UserAction', {
             'name': trackingEvent[0],
             'eventName': trackingEvent[1],
             'geohash': trackingEvent[2],
