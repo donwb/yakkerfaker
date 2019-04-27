@@ -1,6 +1,7 @@
 from faker import Faker
 from yakker import *
 from instrumentation import *
+from videostart import *
 from datetime import datetime
 from time import sleep
 import csv
@@ -31,10 +32,22 @@ def init():
 	for t in threads:
 		t.join()
 		
-	
+def test():
+    print('testing new code....')
+
+    page_fake = Faker()
+    page_fake.add_provider(AppNameProvider)
+    page_fake.add_provider(IDProvider)
+    page_fake.add_provider(CampaignProvider)
+
+    makePageEvent(page_fake)
+
+
 
 def start(si, mp):
 	fake = Faker()
+
+	page_fake = Faker()
 
 	print("starting.....")
 	
@@ -42,6 +55,10 @@ def start(si, mp):
 	fake.add_provider(GeoHashProvider)
 	fake.add_provider(YakkerIDProvider)
 	fake.add_provider(YakarmaProvider)
+	page_fake.add_provider(AppNameProvider)
+	page_fake.add_provider(IDProvider)
+	page_fake.add_provider(CampaignProvider)
+
 
 	with open('yakkerevents.csv', 'w') as myfile:
 		wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)		
@@ -88,6 +105,25 @@ def makeYakkerData(user, event, geohash, yakkerID, yakarma):
 	
 	return yakkerList
 
+def makePageEvent(page_faker):
+    app_name = page_faker.appname()
+    bu = 'cnn'
+    code_version = 'v1'
+    full_url = 'tbd'
+    gu_id = page_faker.randomID()
+    krux_id = page_faker.randomID()
+    highlander_id = page_faker.randomID()
+    adobe_user_id = page_faker.randomID()
+    campaign = page_faker.campaign()
+
+    page_event = [app_name, bu, code_version, full_url, gu_id, krux_id, highlander_id, adobe_user_id, campaign]
+
+
+    print(page_event)
+
+
+	
+
 def setupUsers():
 	User = collections.namedtuple("User", "userid name email")
 
@@ -99,7 +135,8 @@ def setupUsers():
 	return [Don, Brian, Matthew, Tony]
 
 if __name__ == '__main__':
-	init()
+	# init()
+    test()
 	
 	
 
