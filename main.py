@@ -8,6 +8,8 @@ import threading
 import os
 import collections
 
+# this is a comment for a change
+
 writeOutFile = os.environ['WRITE_OUT_FILE'] == 'true'
 iterations = int(os.environ['ITERATIONS'])
 runForever = iterations == -1
