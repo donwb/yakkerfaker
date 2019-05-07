@@ -9,6 +9,8 @@ import os
 import collections
 
 # this is a comment for a change
+# i don't know why you would do this but people do
+
 
 writeOutFile = os.environ['WRITE_OUT_FILE'] == 'true'
 iterations = int(os.environ['ITERATIONS'])
